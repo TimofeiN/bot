@@ -54,9 +54,9 @@ async def send_btc_info(call: types.CallbackQuery):
     btc_task = asyncio.create_task(bin_async.current('BTCUSDT'))
     btc_now = await btc_task
     msg_text = f"" \
-               f"₿ current price - {btc_now['current_price']} $\n" \
-               f"₿ min price 24h - {btc_now['low_price']} $\n" \
-               f"₿ max price 24h - {btc_now['high_price']} $"
+               f"₿ current price - {btc_now['current_price']} $usdt\n" \
+               f"₿ min price 24h - {btc_now['low_price']} $usdt\n" \
+               f"₿ max price 24h - {btc_now['high_price']} $usdt"
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     keyboard.add(types.InlineKeyboardButton(text="More actions with BTC", callback_data="btc_more"))
     await call.message.answer(msg_text, reply_markup=keyboard)

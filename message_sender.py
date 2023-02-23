@@ -16,8 +16,9 @@ async def iterate():
     con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
     async with con.transaction():
         async for record in con.cursor(f'''
-                    SELECT u.user_id, u.price_value, u.price_type_percent 
-                    FROM users_subscriptions u'''):
+                    SELECT u."name", u.btc_subscription, us.user_id, us.price_type_percent, us.price_value FROM users u 
+                    JOIN users_subscriptions us ON us.user_id=u.user_id
+                    WHERE btc_subscription IS TRUE;'''):
             task1 = asyncio.create_task(current("BTCUSDT"))
             cur_price = await task1
             user_id = record['user_id']
