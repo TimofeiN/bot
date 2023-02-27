@@ -9,7 +9,7 @@ from back.xconfig import db_user, db_passwd
 # redis_data = {'u_id': 777, 'u_name': 'test', 'price_type_percent': False, 'price_val': '24980'}
 
 
-redis_data1 = {'u_id': 111222333, 'u_name': 'VAlexandr', 'price_type_percent': False, 'price_val': '19500.01'}
+redis_data1 = {'u_id': 111, 'u_name': 'Max', 'price_type_percent': False, 'price_val': '10500.99'}
 
 
 async def add_user_subscription(connection, redis_data):
@@ -33,8 +33,7 @@ async def add_user_subscription(connection, redis_data):
                     '''INSERT INTO users_subscriptions (user_id, price_type_percent, price_value)
                                         VALUES ($1, $2, $3)''',
                     redis_data['u_id'], redis_data['price_type_percent'], price)
-                print('subscription added')
-                return f'subscription added'
+                return f'Subscription added'
         except asyncpg.exceptions.UniqueViolationError:
             print('subs exists')
             return f'You have already had this subscription'
@@ -44,16 +43,19 @@ async def unsubscribe_all(connection, user_id):
     async with connection.transaction():
         await connection.execute(
             f'''UPDATE users SET btc_subscription=FALSE WHERE user_id=$1;''', user_id)
-        print('unsubscribed')
+        await connection.execute(
+            '''DELETE FROM users_subscriptions WHERE user_id=$1''', user_id)
+
+        return f'unsubscribed'
 
 
 async def show_subscriptions(connection, user_id):
     async with connection.transaction():
-        subscribed = await connection.fetchrow('''SELECT "name", btc_subscription
+        subscribed = await connection.fetchrow('''SELECT btc_subscription
                                                 FROM users WHERE user_id = $1''', user_id)
 
         if subscribed['btc_subscription']:
-            print(f'{subscribed["name"]}, you have a subscriptions:')
+            print(f'you have a subscriptions:')
             user_subscriptions = f''
             async for record in connection.cursor(f'''
                     SELECT id, price_type_percent, price_value FROM users_subscriptions 
@@ -66,16 +68,14 @@ async def show_subscriptions(connection, user_id):
                 else:
                     u_price = record['price_value']
                     symbol = '$'
-                user_subscriptions += emoji.emojize(f':envelope: {sub_id}:  price value {u_price}{symbol}\n')
-            # user_subscriptions = await connection.fetch('''
-            #     SELECT id, price_type_percent, price_value FROM users_subscriptions
-            #     WHERE user_id=$1''', user_id)
+                user_subscriptions += emoji.emojize(f':incoming_envelope: {sub_id}:  price value {u_price}{symbol}\n')
+
             print(user_subscriptions)
-            return f'{subscribed["name"]}, you have a subscriptions:\n' \
+            return f'you have a subscriptions:\n' \
                    f'{user_subscriptions}'
 
         else:
-            print(f'{subscribed["name"]}, no subscriptions added')
+            return f'no subscriptions added'
 
 
 async def remove_subscription(connection, subscriptions_ids):
@@ -109,5 +109,5 @@ async def db_main(db_function, u_data):
 
     # return u_subscr_task.result()
 
-# u_id = 11
-# print(asyncio.run(db_main(show_subscriptions, u_id)))
+
+# print(asyncio.run(db_main(add_user_subscription, redis_data1)))

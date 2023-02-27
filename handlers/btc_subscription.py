@@ -12,6 +12,7 @@ class BtcFeedback(StatesGroup):
     waiting_confirmation = State()
     waiting_price_method = State()
     waiting_price_value = State()
+    # finishing_state = State()
 
 
 async def btc_subsc_start(call: types.CallbackQuery, state: FSMContext):
@@ -68,16 +69,22 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
     await state.update_data(price_val=msg_txt)
 
     user_params = await state.get_data()
-    u_name = user_params['u_name']
-    u_id = user_params['u_id']
     print(user_params)
     task_db = asyncio.create_task(db.db_main(db.add_user_subscription, user_params))
-    await task_db
+    db_res = await task_db
+
+    u_name = user_params['u_name']
+    percent = user_params['price_type_percent']
+    u_price = user_params['price_val']
+    if percent:
+        symbol = ''
+    else:
+        symbol = '$'
     answ_text = emoji.emojize(
         f"Hi, {u_name} :waving_hand: \n"
-        f"Your :ID_button: is: {u_id}\n"
-        f"price in percent: {user_params['price_type_percent']} \nprice value {user_params['price_val']}\n"
-        f"{task_db.result()}")
+        f"{db_res}:\n"
+        f":incoming_envelope: price value {u_price}{symbol}\n"
+        )
     await message.answer(text=answ_text)
     await state.reset_state(with_data=False)
 

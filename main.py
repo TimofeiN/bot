@@ -96,6 +96,7 @@ async def handle_location(message: types.Message):
 
 register_handlers_btc_subscr(dp)
 dp.register_callback_query_handler(handlers.btc_menu.btc_show_subscriptions, text='btc_show_subscriptions')
+dp.register_callback_query_handler(handlers.btc_menu.unsubscribe_all, text='btc_unsubscribe_all')
 # weather_hndl.register_weather_handlers(dp)
 
 
@@ -125,4 +126,4 @@ async def on_startup(dp: Dispatcher):
 
 if __name__ == '__main__':
     # keep_alive()
-    executor.start_polling(dp, skip_updates=True, on_shutdown=on_shutdown)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
