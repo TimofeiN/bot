@@ -14,6 +14,8 @@ from back.xconfig import GHV_TOKEN
 import binance_req as bin_async
 import weather_req as w_async
 import keyboards as kb
+from message_sender import message_sender
+import handlers.btc_menu
 
 
 # import pip
@@ -62,6 +64,13 @@ async def send_btc_info(call: types.CallbackQuery):
     await call.message.answer(msg_text, reply_markup=keyboard)
 
 
+# btc_menu_handler -> 'btc_more'
+@dp.callback_query_handler(text='btc_more')
+async def btc_menu(call: types.CallbackQuery):
+    await call.answer(text='ერთი წამი')
+    await call.message.answer('Choose option', reply_markup=kb.btc_menu_kb)
+
+
 @dp.message_handler(Text(equals=f'TBILISI {emoji.emojize(":Georgia:")}'))
 async def tbilisi_now(message: types.Message):
     w_task = asyncio.create_task(w_async.current_weather(*w_async.cities_dict['tbilisi']))
@@ -86,6 +95,7 @@ async def handle_location(message: types.Message):
 
 
 register_handlers_btc_subscr(dp)
+dp.register_callback_query_handler(handlers.btc_menu.btc_show_subscriptions, text='btc_show_subscriptions')
 # weather_hndl.register_weather_handlers(dp)
 
 
@@ -101,6 +111,16 @@ async def on_shutdown(dp: Dispatcher):
     await dp.storage.close()
     await dp.storage.wait_closed()
     logging.info("Storage Connection closed")
+
+
+async def start_binance(sleep_time):
+    while True:
+        await asyncio.sleep(sleep_time)
+        await message_sender()
+
+
+async def on_startup(dp: Dispatcher):
+    asyncio.create_task(start_binance(10))
 
 
 if __name__ == '__main__':

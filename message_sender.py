@@ -1,5 +1,6 @@
 import asyncpg
 import asyncio
+import logging
 from back.xconfig import db_user, db_passwd
 from binance_req import current
 
@@ -28,18 +29,20 @@ async def iterate():
                 user_price = record['price_value'] * cur_price['high_price']
             else:
                 user_price = record['price_value']
-            print(f'id {user_id} - price{user_price} | current{cur_price["current_price"]} | '
-                  f'max{cur_price["high_price"]}')
+
             if cur_price['current_price'] <= user_price:
+                # logging.info(f'   --> sending msg to user_id #{user_id}')
                 print(f'   --> sending msg to user_id #{user_id}')
 
 
 async def message_sender():
     task = asyncio.create_task(iterate())
     await task
-    print('sleep')
+    # print('sleep')
     await asyncio.sleep(5)
 
 
+"""
 while True:
     asyncio.run(message_sender())
+"""

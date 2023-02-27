@@ -1,12 +1,11 @@
 import asyncio
-import decimal
-
 import emoji
+
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-from db_functions import main
+import db_functions as db
 
 
 class BtcFeedback(StatesGroup):
@@ -62,7 +61,6 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
         if msg_txt not in ["2%", "5%", "10%"]:
             await message.answer('You need to choose one option.Use special keyboard buttons')
             return
-        price = 1 - decimal.Decimal(msg_txt[:-1]) / 100
     else:
         if not (msg_txt[-2:-1].isdigit() and msg_txt[1:-3].isdigit()):
             await message.answer('Please type your price in correct format. Example 12345.78')
@@ -73,7 +71,7 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
     u_name = user_params['u_name']
     u_id = user_params['u_id']
     print(user_params)
-    task_db = asyncio.create_task(main(user_params))
+    task_db = asyncio.create_task(db.db_main(db.add_user_subscription, user_params))
     await task_db
     answ_text = emoji.emojize(
         f"Hi, {u_name} :waving_hand: \n"
@@ -86,7 +84,7 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
 
 def register_handlers_btc_subscr(dp: Dispatcher):
     print('register handlers')
-    dp.register_callback_query_handler(btc_subsc_start, text="btc_more", state="*")
+    dp.register_callback_query_handler(btc_subsc_start, text="btc_add_subscription", state="*")
     dp.register_message_handler(btc_subsc_price_type, state=BtcFeedback.waiting_confirmation)
     dp.register_message_handler(bts_subscr_price_value, state=BtcFeedback.waiting_price_method)
     dp.register_message_handler(bts_subscr_u_params, state=BtcFeedback.waiting_price_value)

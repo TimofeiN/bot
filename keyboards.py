@@ -27,3 +27,17 @@ bat_btn = KeyboardButton(text=f'BATUMI {emj_georgia}')
 
 cities_kb.row(tbi_btn, bat_btn)
 cities_kb.add(user_loc_btn)
+
+
+# bitcoin menu keyboard
+btc_menu_kb = InlineKeyboardMarkup(row_width=1)
+
+btc_subscribe_text = f'Add subscription'
+btc_show_subs_text = f'Show current subscriptions'
+btc_unsubscribe_text = f'Unsubscribe all'
+
+btn_subscribe = InlineKeyboardButton(text=btc_subscribe_text, callback_data='btc_add_subscription')
+btn_show_subs = InlineKeyboardButton(text=btc_show_subs_text, callback_data='btc_show_subscriptions')
+btn_unsubscribe = InlineKeyboardButton(text=btc_unsubscribe_text, callback_data='btc_unsubscribe_all')
+
+btc_menu_kb.add(btn_subscribe, btn_show_subs, btn_unsubscribe)

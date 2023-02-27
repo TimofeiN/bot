@@ -1,7 +1,9 @@
 import asyncio
 import asyncpg
 import decimal
-from pprint import pprint
+# from pprint import pprint
+import emoji
+
 from back.xconfig import db_user, db_passwd
 
 # redis_data = {'u_id': 777, 'u_name': 'test', 'price_type_percent': False, 'price_val': '24980'}
@@ -19,7 +21,7 @@ async def add_user_subscription(connection, redis_data):
 
     async with connection.transaction():
         await connection.execute(
-            '''INSERT INTO users (user_id, name) VALUES ($1, $2) (user_id) 
+            '''INSERT INTO users (user_id, name) VALUES ($1, $2) 
             ON CONFLICT (user_id) DO UPDATE 
             SET btc_subscription=TRUE 
             WHERE users.btc_subscription=FALSE''',
@@ -51,14 +53,29 @@ async def show_subscriptions(connection, user_id):
                                                 FROM users WHERE user_id = $1''', user_id)
 
         if subscribed['btc_subscription']:
-            print(f'{subscribed["name"]}, you have a subscription')
-            user_subscriptions = await connection.fetch('''
-                SELECT id, price_type_percent, price_value FROM users_subscriptions 
-                WHERE user_id=$1''', user_id)
-            pprint(user_subscriptions)
+            print(f'{subscribed["name"]}, you have a subscriptions:')
+            user_subscriptions = f''
+            async for record in connection.cursor(f'''
+                    SELECT id, price_type_percent, price_value FROM users_subscriptions 
+                    WHERE user_id=$1''', user_id):
+                sub_id = record['id']
+                percent = record['price_type_percent']
+                if percent:
+                    u_price = (1 - record['price_value']) * 100
+                    symbol = '%'
+                else:
+                    u_price = record['price_value']
+                    symbol = '$'
+                user_subscriptions += emoji.emojize(f':envelope: {sub_id}:  price value {u_price}{symbol}\n')
+            # user_subscriptions = await connection.fetch('''
+            #     SELECT id, price_type_percent, price_value FROM users_subscriptions
+            #     WHERE user_id=$1''', user_id)
+            print(user_subscriptions)
+            return f'{subscribed["name"]}, you have a subscriptions:\n' \
+                   f'{user_subscriptions}'
 
         else:
-            print(f'{subscribed["name"]}, no subscription')
+            print(f'{subscribed["name"]}, no subscriptions added')
 
 
 async def remove_subscription(connection, subscriptions_ids):
@@ -67,21 +84,18 @@ async def remove_subscription(connection, subscriptions_ids):
         print('Subs deleted')
 
 
-"""
-# for add_u_subscr
-async def main(data):
+async def db_main(db_function, u_data):
     con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
-    u_subscr_task = asyncio.create_task(add_user_subscription(con, data))
-    await u_subscr_task
+
+    db_task = asyncio.create_task(db_function(con, u_data))
+    await db_task
     await asyncio.sleep(1)
-    return u_subscr_task.result()
-"""
+    return db_task.result()
 
-
-async def main(u_data):
-    con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
-    u_subscr_task = asyncio.create_task(add_user_subscription(con, u_data))
-    await u_subscr_task
+    # u_subscr_task = asyncio.create_task(add_user_subscription(con, u_data))
+    # await u_subscr_task
+    # await asyncio.sleep(1)
+    # return u_subscr_task.result()
 
     # unsubscr_task = asyncio.create_task(unsubscribe_all(con, 102))
     # await unsubscr_task
@@ -89,11 +103,11 @@ async def main(u_data):
     # show_s_task = asyncio.create_task(show_subscriptions(con, 777))
     # await show_s_task
 
-    # remove_task = asyncio.create_task(remove_subscription(con, [44, 46]))
+    # remove_task = asyncio.create_task(remove_subscription(con, u_data))
     # await remove_task
     # await asyncio.sleep(1)
 
     # return u_subscr_task.result()
 
-
-# asyncio.run(main())
+# u_id = 11
+# print(asyncio.run(db_main(show_subscriptions, u_id)))
