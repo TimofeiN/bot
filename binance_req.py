@@ -1,4 +1,4 @@
-import asyncio
+# import asyncio
 from aiohttp import ClientSession
 from decimal import Decimal
 
@@ -16,12 +16,6 @@ async def current(symbol):
                     'low_price': low_price,
                     'high_price': high_price}
 
-
-
-            # return f"" \
-            #        f"₿ current price - {current_price} $\n" \
-            #        f"₿ min price 24h - {low_price} $\n" \
-            #        f"₿ max price 24h - {high_price} $"
 
 """
 async def main(symbol):

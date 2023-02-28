@@ -39,10 +39,8 @@ async def message_sender():
     task = asyncio.create_task(iterate())
     await task
     # print('sleep')
-    await asyncio.sleep(5)
+    await asyncio.sleep(2)
 
 
-"""
-while True:
-    asyncio.run(message_sender())
-"""
+# while True:
+#     asyncio.run(message_sender())

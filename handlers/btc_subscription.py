@@ -12,11 +12,10 @@ class BtcFeedback(StatesGroup):
     waiting_confirmation = State()
     waiting_price_method = State()
     waiting_price_value = State()
-    # finishing_state = State()
 
 
 async def btc_subsc_start(call: types.CallbackQuery, state: FSMContext):
-    await call.answer(text='ერთი წამი')
+    await call.answer(text='Working on it')
     await state.set_state(BtcFeedback.waiting_confirmation.state)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     keyboard.add("Let's do it", "No thanx")
@@ -80,6 +79,7 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
         symbol = ''
     else:
         symbol = '$'
+
     answ_text = emoji.emojize(
         f"Hi, {u_name} :waving_hand: \n"
         f"{db_res}:\n"

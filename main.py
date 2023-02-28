@@ -16,6 +16,7 @@ import weather_req as w_async
 import keyboards as kb
 from message_sender import message_sender
 import handlers.btc_menu
+from messages import msg
 
 
 # import pip
@@ -32,9 +33,9 @@ dp = Dispatcher(bot, storage=storage)
 
 @dp.message_handler(commands=['start'])
 async def start_message(message: types.Message):
-    text = emoji.emojize('Hi! :victory_hand:'
-                         'Write me smth. or press /help')
-    await message.reply(text)
+    # text = emoji.emojize('Hi! :victory_hand:'
+    #                      'Write me smth. or press /help')
+    await message.reply(msg.welcome)
 
 
 @dp.message_handler(commands=['cancel'], state="*")
@@ -46,7 +47,7 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text='weather_button')
 async def send_weather(call: types.CallbackQuery):
-    await call.answer(text='ერთი წამი')
+    await call.answer(text='Working on it')
     await call.message.answer('Choose city', reply_markup=kb.cities_kb)
 
 
@@ -67,7 +68,7 @@ async def send_btc_info(call: types.CallbackQuery):
 # btc_menu_handler -> 'btc_more'
 @dp.callback_query_handler(text='btc_more')
 async def btc_menu(call: types.CallbackQuery):
-    await call.answer(text='ერთი წამი')
+    await call.answer(text='Working on it')
     await call.message.answer('Choose option', reply_markup=kb.btc_menu_kb)
 
 
@@ -97,6 +98,8 @@ async def handle_location(message: types.Message):
 register_handlers_btc_subscr(dp)
 dp.register_callback_query_handler(handlers.btc_menu.btc_show_subscriptions, text='btc_show_subscriptions')
 dp.register_callback_query_handler(handlers.btc_menu.unsubscribe_all, text='btc_unsubscribe_all')
+
+handlers.btc_menu.register_handler_manage_subs(dp)
 # weather_hndl.register_weather_handlers(dp)
 
 
@@ -126,4 +129,4 @@ async def on_startup(dp: Dispatcher):
 
 if __name__ == '__main__':
     # keep_alive()
-    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
+    executor.start_polling(dp, skip_updates=True, on_shutdown=on_shutdown)

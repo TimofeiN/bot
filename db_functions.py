@@ -6,8 +6,6 @@ import emoji
 
 from back.xconfig import db_user, db_passwd
 
-# redis_data = {'u_id': 777, 'u_name': 'test', 'price_type_percent': False, 'price_val': '24980'}
-
 
 redis_data1 = {'u_id': 111, 'u_name': 'Max', 'price_type_percent': False, 'price_val': '10500.99'}
 
@@ -55,8 +53,8 @@ async def show_subscriptions(connection, user_id):
                                                 FROM users WHERE user_id = $1''', user_id)
 
         if subscribed['btc_subscription']:
-            print(f'you have a subscriptions:')
-            user_subscriptions = f''
+            # print(f'you have a subscriptions:')
+            user_subscriptions = {}
             async for record in connection.cursor(f'''
                     SELECT id, price_type_percent, price_value FROM users_subscriptions 
                     WHERE user_id=$1''', user_id):
@@ -68,11 +66,12 @@ async def show_subscriptions(connection, user_id):
                 else:
                     u_price = record['price_value']
                     symbol = '$'
-                user_subscriptions += emoji.emojize(f':incoming_envelope: {sub_id}:  price value {u_price}{symbol}\n')
+                # user_subscriptions += emoji.emojize(f':incoming_envelope: {sub_id}:  price value {u_price}{symbol}\n')
+                subscription = {sub_id: f'price value {u_price}{symbol}'}
+                user_subscriptions.update(subscription)
 
-            print(user_subscriptions)
-            return f'you have a subscriptions:\n' \
-                   f'{user_subscriptions}'
+            # print(user_subscriptions)
+            return user_subscriptions
 
         else:
             return f'no subscriptions added'
