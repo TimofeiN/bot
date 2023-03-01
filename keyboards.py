@@ -2,6 +2,8 @@ import asyncio
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
 import emoji
+
+from main import ManageSubscriptions
 from messages import msg
 
 

@@ -81,6 +81,7 @@ async def remove_subscription(connection, subscriptions_ids):
     async with connection.transaction():
         await connection.execute('''DELETE FROM users_subscriptions WHERE id=any($1)''', subscriptions_ids)
         print('Subs deleted')
+        return f'Subscriptions changed'
 
 
 async def db_main(db_function, u_data):
