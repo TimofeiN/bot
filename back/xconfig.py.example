@@ -1,0 +1,10 @@
+# Example of xconfig.py file
+
+# API tokens
+GHV_TOKEN = 'bot token'
+OW_TOKEN = 'weather token'
+
+# DB config
+db_user = 'postgres'
+db_passwd = '****'
+db_name = 'test'

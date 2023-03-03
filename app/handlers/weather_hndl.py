@@ -1,4 +1,6 @@
 import asyncio
+import logging
+
 from aiogram import Dispatcher, types
 from aiogram.dispatcher.filters import Text
 
@@ -33,7 +35,7 @@ async def handle_location(message: types.Message):
 
 
 def register_handlers_weather(dp: Dispatcher):
-    print('register weather handlers')
+    logging.info('register weather handlers')
     dp.register_callback_query_handler(weather_start, text='weather_button')
     dp.register_message_handler(tbilisi_now, Text(equals=msg.btn_tbi_text))
     dp.register_message_handler(batumi_now, lambda message: message.text == msg.btn_bat_text)

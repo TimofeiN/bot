@@ -1,4 +1,6 @@
 import asyncio
+import logging
+
 import emoji
 from aiogram import types, Bot, Dispatcher
 from aiogram.dispatcher import FSMContext
@@ -40,7 +42,7 @@ async def btc_show_subscriptions(call: types.CallbackQuery):
     if res:
         u_subscriptions = f'your subscriptions:\n'
         for v in res:
-            u_subscriptions += emoji.emojize(f':incoming_envelope: {res[v]}\n')
+            u_subscriptions += emoji.emojize(f':envelope: {res[v]}\n')
         answer_txt += f'{u_subscriptions}'
     else:
         answer_txt += f'no subscriptions added'
@@ -86,7 +88,6 @@ async def manage_subscriptions_choice(call: types.CallbackQuery, state: FSMConte
     bot = Bot.get_current()
     u_subscriptions = await state.get_data()
     call_data = call.data
-    print(u_subscriptions)
     symbol = emoji.emojize(':prohibited:')
 
     if call_data.isdigit():
@@ -103,17 +104,15 @@ async def manage_subscriptions_choice(call: types.CallbackQuery, state: FSMConte
         return
 
     elif call_data == 'back':
-        print('back')
         await state.reset_state()
         await bot.delete_message(message_id=msg_id, chat_id=chat_id)
         return
 
-    print('confirm')
     unsub_lst = []
     for k in u_subscriptions:
         if u_subscriptions[k].startswith(symbol):
             unsub_lst.append(int(k))
-    print(unsub_lst)
+    logging.info(f'{unsub_lst} - subscriptions deleted:')
     db_task = asyncio.create_task(db.db_main(db.remove_subscription, unsub_lst))
     res = await db_task
     await state.reset_state()
@@ -126,7 +125,7 @@ async def manage_subscriptions_any_msg(message: types.Message):
 
 
 def register_handlers_manage_subs(dp: Dispatcher):
-    print('register manage handlrs')
+    logging.info('register manage handlers')
     dp.register_callback_query_handler(manage_subscriptions_start, text='btc_manage_subscriptions', state='*')
     dp.register_callback_query_handler(manage_subscriptions_choice, state=ManageSubscriptions.start_manage)
     dp.register_message_handler(manage_subscriptions_any_msg, state=ManageSubscriptions.states)

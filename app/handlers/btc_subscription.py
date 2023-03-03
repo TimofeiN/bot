@@ -1,4 +1,6 @@
 import asyncio
+import logging
+
 import emoji
 
 from aiogram import Dispatcher, types
@@ -92,7 +94,7 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
 
 
 def register_handlers_btc_subscr(dp: Dispatcher):
-    print('register btc_subscription handlers')
+    logging.info('register btc_subscription handlers')
     dp.register_callback_query_handler(btc_subsc_start, text="btc_add_subscription", state="*")
     dp.register_message_handler(btc_subsc_price_type, state=BtcFeedback.waiting_confirmation)
     dp.register_message_handler(bts_subscr_price_value, state=BtcFeedback.waiting_price_method)

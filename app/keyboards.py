@@ -24,16 +24,13 @@ cities_kb.add(user_loc_btn)
 # bitcoin menu keyboard
 btc_menu_kb = InlineKeyboardMarkup(row_width=1)
 
-btc_subscribe_text = f'Add subscription'
-btc_show_subs_text = f'Show current subscriptions'
-btc_manage_subs_text = f'Manage current subscriptions'
-btc_unsubscribe_text = f'Unsubscribe all'
+
 
 btn_show_price = InlineKeyboardButton(text=msg.btn_show_price_text, callback_data='btc_current_price')
-btn_subscribe = InlineKeyboardButton(text=btc_subscribe_text, callback_data='btc_add_subscription')
-btn_show_subs = InlineKeyboardButton(text=btc_show_subs_text, callback_data='btc_show_subscriptions')
-btn_manage_subs = InlineKeyboardButton(text=btc_manage_subs_text, callback_data='btc_manage_subscriptions')
-btn_unsubscribe = InlineKeyboardButton(text=btc_unsubscribe_text, callback_data='btc_unsubscribe_all')
+btn_subscribe = InlineKeyboardButton(text=msg.btc_subscribe_text, callback_data='btc_add_subscription')
+btn_show_subs = InlineKeyboardButton(text=msg.btc_show_subs_text, callback_data='btc_show_subscriptions')
+btn_manage_subs = InlineKeyboardButton(text=msg.btc_manage_subs_text, callback_data='btc_manage_subscriptions')
+btn_unsubscribe = InlineKeyboardButton(text=msg.btc_unsubscribe_text, callback_data='btc_unsubscribe_all')
 
 btc_menu_kb.add(btn_show_price, btn_subscribe, btn_show_subs, btn_manage_subs, btn_unsubscribe)
 

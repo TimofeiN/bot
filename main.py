@@ -17,7 +17,7 @@ import app.handlers.btc_menu as bitcoin_menu
 from message_sender import message_sender
 from app.messages import msg
 
-
+# import for public hosting
 # import pip
 # from background import keep_alive
 # pip.main(['install', 'aiogram'])
@@ -54,8 +54,9 @@ dp.register_callback_query_handler(bitcoin_menu.unsubscribe_all, text='btc_unsub
 @dp.message_handler()
 @dp.message_handler(commands=['help'])
 async def echo(message: types.Message):
+
     await message.answer(message.text)
-    await message.answer('What can I do:', reply_markup=keyboards.start_inline_kb)
+    await message.reply('What can I do:', reply_markup=keyboards.start_inline_kb)
 
 
 # main functions
@@ -66,15 +67,9 @@ async def on_shutdown(dp: Dispatcher):
     logging.info("Storage Connection closed")
 
 
-async def start_binance():
-    start_task = asyncio.create_task(message_sender())
-    while True:
-        await asyncio.sleep(5)
-        await start_task
-
-
 async def on_startup(dp: Dispatcher):
-    asyncio.create_task(start_binance())
+    # Run message sender in background
+    asyncio.create_task(message_sender())
 
 
 if __name__ == '__main__':
