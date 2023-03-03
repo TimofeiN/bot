@@ -5,12 +5,14 @@ Bot works with binance crypto exchange. Bot stores your price options and sends 
 You can add, cahange, delete your subscriptions (price options). You can have as many subscriptions as you want.
 Also for fun it can show you weather in some cities or directly in your location.
 
+
 Maximum asynchronius.
 Wrote with:
 - asyncio
 - aiogram
 - asyncpg
 - aiohttp
+
 
 Uses: 
 - Redis, PostgreSQL
