@@ -1,4 +1,6 @@
 import asyncio
+import logging
+
 import emoji
 
 from aiogram import Dispatcher, types
@@ -6,6 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 import db_functions as db
+import app.keyboards as keyboards
 
 
 class BtcFeedback(StatesGroup):
@@ -24,6 +27,7 @@ async def btc_subsc_start(call: types.CallbackQuery, state: FSMContext):
 
 async def btc_subsc_price_type(message: types.Message, state: FSMContext):
     if not message.text.lower() == "let's do it":
+        await message.answer('Use buttons or press /cancel')
         return
     await state.update_data(u_id=message.from_user.id)
     await state.update_data(u_name=message.from_user.first_name)
@@ -36,7 +40,7 @@ async def btc_subsc_price_type(message: types.Message, state: FSMContext):
 
 async def bts_subscr_price_value(message: types.Message, state: FSMContext):
     if not (message.text.lower() == "in percent %" or message.text.lower() == "absolutely price"):
-        await message.answer('You need to choose price param')
+        await message.answer('Use buttons or press /cancel')
         return
     await state.set_state(BtcFeedback.waiting_price_value.state)
 
@@ -85,12 +89,12 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
         f"{db_res}:\n"
         f":incoming_envelope: price value {u_price}{symbol}\n"
         )
-    await message.answer(text=answ_text)
-    await state.reset_state(with_data=False)
+    await message.answer(text=answ_text, reply_markup=keyboards.btc_more_kb)
+    await state.reset_state()
 
 
 def register_handlers_btc_subscr(dp: Dispatcher):
-    print('register handlers')
+    logging.info('register btc_subscription handlers')
     dp.register_callback_query_handler(btc_subsc_start, text="btc_add_subscription", state="*")
     dp.register_message_handler(btc_subsc_price_type, state=BtcFeedback.waiting_confirmation)
     dp.register_message_handler(bts_subscr_price_value, state=BtcFeedback.waiting_price_method)

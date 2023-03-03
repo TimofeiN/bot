@@ -1,6 +1,7 @@
-import asyncio
+# import asyncio
 from aiohttp import ClientSession
 from back.xconfig import OW_TOKEN
+from app.messages import msg
 
 
 def wind_converter(wind_dir_deg):
@@ -39,9 +40,8 @@ async def current_weather(lat, lon):
             wind_degr = reply['wind']['deg']
             wind_dir = wind_converter(wind_degr)
 
-            return f'In {city_name} now: {description}\n' \
-                   f'{temp}°C, feels like {f_l_temp}°C \n' \
-                   f'wind {wind_dir} speed {wind_speed} m/s'
+            return msg.weather_answer.format(city_name=city_name, description=description, temp=temp, f_l_temp=f_l_temp,
+                                             wind_speed=wind_speed, wind_degr=wind_degr, wind_dir=wind_dir)
 
 
 cities_dict = {

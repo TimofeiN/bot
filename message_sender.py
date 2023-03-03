@@ -1,8 +1,12 @@
 import asyncpg
 import asyncio
 import logging
+from aiogram import Bot
+
+
 from back.xconfig import db_user, db_passwd
-from binance_req import current
+from app.binance_req import current
+from app.messages import msg
 
 """
 to use:
@@ -30,16 +34,21 @@ async def iterate():
             else:
                 user_price = record['price_value']
 
-            if cur_price['current_price'] <= user_price:
-                # logging.info(f'   --> sending msg to user_id #{user_id}')
-                print(f'   --> sending msg to user_id #{user_id}')
+            if cur_price['current_price'] < user_price:
+                current_price = round(cur_price['current_price'], 4)
+                profit = user_price - cur_price['current_price']
+                logging.info(f'   --> sending msg to user_id #{user_id}')
+                text = msg.price_drop.format(current_price=current_price, profit=profit)
+                bot = Bot.get_current()
+                await bot.send_message(chat_id=user_id, text=text)
 
 
 async def message_sender():
-    task = asyncio.create_task(iterate())
-    await task
-    # print('sleep')
-    await asyncio.sleep(2)
+    while True:
+        task = asyncio.create_task(iterate())
+        await task
+        # print('sleep')
+        await asyncio.sleep(10)
 
 
 # while True:

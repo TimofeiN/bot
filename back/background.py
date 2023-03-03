@@ -2,6 +2,10 @@ from flask import Flask
 from threading import Thread
 import requests
 
+"""
+Code in this file keeps bot alive if you host it in a free hosting server.
+"""
+
 app = Flask('')
 
 
