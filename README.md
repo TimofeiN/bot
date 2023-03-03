@@ -7,6 +7,7 @@ Also for fun it can show you weather in some cities or directly in your location
 
 
 Maximum asynchronius.
+
 Wrote with:
 - asyncio
 - aiogram
