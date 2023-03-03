@@ -1,36 +1,21 @@
-import asyncio
-
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
-import emoji
 
-from main import ManageSubscriptions
-from messages import msg
-
+from app.messages import msg
 
 
 # start menu keyboard
-import db_functions
-
 start_inline_kb = InlineKeyboardMarkup(row_width=1)
-
-btn_weather_text = f'Show weather {emoji.emojize(":thermometer:")}'
-btn_btc_text = f'Show bitcoin price {emoji.emojize(":bar_chart:")}'
-
-btn_weather = InlineKeyboardButton(text=btn_weather_text, callback_data='weather_button')
-btn_btc = InlineKeyboardButton(text=btn_btc_text, callback_data='bitcoin_button')
-
+btn_weather = InlineKeyboardButton(text=msg.btn_weather_text, callback_data='weather_button')
+btn_btc = InlineKeyboardButton(text=msg.btn_btc_menu, callback_data='btc_menu')
 start_inline_kb.add(btn_weather, btn_btc)
 
 
 # choose weather keyboard
 cities_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, one_time_keyboard=True)
 
-emj_georgia = emoji.emojize(':Georgia:')
-loc_text = f'MY LOCATION \N{world map}'
-
-user_loc_btn = KeyboardButton(text=loc_text, request_location=True)
-tbi_btn = KeyboardButton(text=f'TBILISI {emj_georgia}')
-bat_btn = KeyboardButton(text=f'BATUMI {emj_georgia}')
+user_loc_btn = KeyboardButton(text=msg.loc_text, request_location=True)
+tbi_btn = KeyboardButton(text=msg.btn_tbi_text)
+bat_btn = KeyboardButton(text=msg.btn_bat_text)
 
 cities_kb.row(tbi_btn, bat_btn)
 cities_kb.add(user_loc_btn)
@@ -44,12 +29,13 @@ btc_show_subs_text = f'Show current subscriptions'
 btc_manage_subs_text = f'Manage current subscriptions'
 btc_unsubscribe_text = f'Unsubscribe all'
 
+btn_show_price = InlineKeyboardButton(text=msg.btn_show_price_text, callback_data='btc_current_price')
 btn_subscribe = InlineKeyboardButton(text=btc_subscribe_text, callback_data='btc_add_subscription')
 btn_show_subs = InlineKeyboardButton(text=btc_show_subs_text, callback_data='btc_show_subscriptions')
 btn_manage_subs = InlineKeyboardButton(text=btc_manage_subs_text, callback_data='btc_manage_subscriptions')
 btn_unsubscribe = InlineKeyboardButton(text=btc_unsubscribe_text, callback_data='btc_unsubscribe_all')
 
-btc_menu_kb.add(btn_subscribe, btn_show_subs, btn_manage_subs, btn_unsubscribe)
+btc_menu_kb.add(btn_show_price, btn_subscribe, btn_show_subs, btn_manage_subs, btn_unsubscribe)
 
 
 # manage subscriptions keyboard
@@ -66,3 +52,9 @@ async def build_manage_kb(u_subscriptions, step=0):
         confirm_button = InlineKeyboardButton(text=msg.confirm, callback_data='confirm')
         manage_subs_kb.row(back_button, confirm_button)
     return manage_subs_kb
+
+
+# finish any btc action keyboard
+btc_more_kb = InlineKeyboardMarkup(row_width=1)
+btn_btc_more = InlineKeyboardButton(text="More actions with BTC", callback_data="btc_menu")
+btc_more_kb.add(btn_btc_more)

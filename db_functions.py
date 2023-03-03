@@ -2,12 +2,8 @@ import asyncio
 import asyncpg
 import decimal
 # from pprint import pprint
-import emoji
 
 from back.xconfig import db_user, db_passwd
-
-
-redis_data1 = {'u_id': 111, 'u_name': 'Max', 'price_type_percent': False, 'price_val': '10500.99'}
 
 
 async def add_user_subscription(connection, redis_data):
@@ -72,9 +68,6 @@ async def show_subscriptions(connection, user_id):
 
             # print(user_subscriptions)
             return user_subscriptions
-
-        else:
-            return f'no subscriptions added'
 
 
 async def remove_subscription(connection, subscriptions_ids):

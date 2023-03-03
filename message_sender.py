@@ -1,8 +1,10 @@
 import asyncpg
 import asyncio
 import logging
+from aiogram import Bot
+
 from back.xconfig import db_user, db_passwd
-from binance_req import current
+from app.binance_req import current
 
 """
 to use:
@@ -31,8 +33,12 @@ async def iterate():
                 user_price = record['price_value']
 
             if cur_price['current_price'] <= user_price:
-                # logging.info(f'   --> sending msg to user_id #{user_id}')
-                print(f'   --> sending msg to user_id #{user_id}')
+                profit = user_price - cur_price['current_price']
+                logging.info(f'   --> sending msg to user_id #{user_id}')
+                msg_price_drop = f"It's time to buy. Now price is {cur_price['current_price']}" \
+                                 f"Your profit is {profit} $ from one ₿"
+                # bot = Bot.get_current()
+                # await bot.send_message(chat_id=user_id, text=msg_price_drop)
 
 
 async def message_sender():

@@ -9,9 +9,9 @@ async def current(symbol):
         async with session.get(url) as response:
             reply = await response.json()
 
-            last_price = Decimal(reply['lastPrice']).normalize()
-            low_price = Decimal(reply['lowPrice']).normalize()
-            high_price = Decimal(reply['highPrice']).normalize()
+            last_price = Decimal(reply['lastPrice'])
+            low_price = Decimal(reply['lowPrice'])
+            high_price = Decimal(reply['highPrice'])
             return {'current_price': last_price,
                     'low_price': low_price,
                     'high_price': high_price}
