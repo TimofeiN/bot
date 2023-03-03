@@ -6,7 +6,7 @@ You can add, cahange, delete your subscriptions (price options). You can have as
 Also for fun it can show you weather in some cities or directly in your location.
 
 
-Maximum asynchronius.
+Maximum asynchronous.
 
 Wrote with:
 - asyncio
