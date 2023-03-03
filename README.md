@@ -1,4 +1,4 @@
-# bot
+# bitcoin bot
 
 This bot is a pet-project.
 Bot works with binance crypto exchange. Bot stores your price options and sends you message when bitcoin price drops to your value or less.
