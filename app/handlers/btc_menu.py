@@ -71,7 +71,7 @@ async def manage_subscriptions_start(call: types.CallbackQuery, state: FSMContex
     u_subscriptions = await db_task
 
     if not u_subscriptions:
-        print('no subs')
+        await call.message.answer(text='No subscriptions added')
         return
 
     await state.set_state(ManageSubscriptions.start_manage.state)

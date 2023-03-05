@@ -8,14 +8,6 @@ from back.xconfig import db_user, db_passwd
 from app.binance_req import current
 from app.messages import msg
 
-"""
-to use:
-async def iterate(con: Connection):
-    async with con.transaction():
-        async for record in stmt.cursor(10):
-            print(record)
-"""
-
 
 async def iterate():
     con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
@@ -49,7 +41,3 @@ async def message_sender():
         await task
         # print('sleep')
         await asyncio.sleep(10)
-
-
-# while True:
-#     asyncio.run(message_sender())

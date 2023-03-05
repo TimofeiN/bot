@@ -1,6 +1,5 @@
 import asyncio
 import logging
-
 import emoji
 
 from aiogram import Dispatcher, types

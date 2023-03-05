@@ -23,9 +23,6 @@ cities_kb.add(user_loc_btn)
 
 # bitcoin menu keyboard
 btc_menu_kb = InlineKeyboardMarkup(row_width=1)
-
-
-
 btn_show_price = InlineKeyboardButton(text=msg.btn_show_price_text, callback_data='btc_current_price')
 btn_subscribe = InlineKeyboardButton(text=msg.btc_subscribe_text, callback_data='btc_add_subscription')
 btn_show_subs = InlineKeyboardButton(text=msg.btc_show_subs_text, callback_data='btc_show_subscriptions')

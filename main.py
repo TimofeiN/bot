@@ -1,6 +1,5 @@
 import asyncio
 import logging
-# import os
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher import FSMContext
@@ -19,8 +18,7 @@ from app.messages import msg
 
 # import for public hosting
 # import pip
-# from background import keep_alive
-# pip.main(['install', 'aiogram'])
+# from back.background import keep_alive
 
 
 logging.basicConfig(level=logging.INFO)
@@ -67,8 +65,8 @@ async def on_shutdown(dp: Dispatcher):
     logging.info("Storage Connection closed")
 
 
+# Run message sender in background
 async def on_startup(dp: Dispatcher):
-    # Run message sender in background
     asyncio.create_task(message_sender())
 
 
