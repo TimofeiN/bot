@@ -82,12 +82,12 @@ async def bts_subscr_u_params(message: types.Message, state: FSMContext):
         symbol = ''
     else:
         symbol = '$'
-
     answ_text = emoji.emojize(
         f"Hi, {u_name} :waving_hand: \n"
         f"{db_res}:\n"
         f":incoming_envelope: price value {u_price}{symbol}\n"
         )
+
     await message.answer(text=answ_text, reply_markup=keyboards.btc_more_kb)
     await state.reset_state()
 

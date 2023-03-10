@@ -2,7 +2,7 @@ import asyncio
 import asyncpg
 import decimal
 
-from back.xconfig import db_user, db_passwd
+from back.xconfig import db_user, db_passwd, db_name
 
 
 async def add_user_subscription(connection, redis_data):
@@ -68,8 +68,21 @@ async def remove_subscription(connection, subscriptions_ids):
         return f'Subscriptions changed'
 
 
+async def check_subscribed(connection, user_id):
+    async with connection.transaction():
+        response = await connection.fetchrow('''SELECT btc_subscription FROM users WHERE user_id = $1''', user_id)
+        value = response['btc_subscription']
+        return value
+
+
+async def delete_user(connection, user_id):
+    async with connection.transaction():
+        await connection.execute('''DELETE FROM users_subscriptions WHERE user_id=$1''', user_id)
+        await connection.execute('''DELETE FROM users WHERE user_id=$1''', user_id)
+
+
 async def db_main(db_function, u_data):
-    con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
+    con = await asyncpg.connect(host='localhost', database=db_name, user=db_user, password=db_passwd)
 
     db_task = asyncio.create_task(db_function(con, u_data))
     await db_task
