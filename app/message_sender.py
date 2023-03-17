@@ -9,6 +9,7 @@ from app.binance_req import current
 from app.messages import msg
 
 
+# Main background function iterates throw database records and send message to user
 async def iterate():
     con = await asyncpg.connect(host='localhost', database='test', user=db_user, password=db_passwd)
     async with con.transaction():

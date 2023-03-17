@@ -10,6 +10,7 @@ import db_functions as db
 import app.keyboards as keyboards
 
 
+# Adding new user or subscription step-by-step uses Redis FSM
 class BtcFeedback(StatesGroup):
     waiting_confirmation = State()
     waiting_price_method = State()

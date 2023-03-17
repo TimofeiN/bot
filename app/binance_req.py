@@ -3,6 +3,7 @@ from aiohttp import ClientSession
 from decimal import Decimal
 
 
+# Get a current bitcoin values
 async def current(symbol):
     async with ClientSession() as session:
         url = f'https://api.binance.com/api/v3/ticker/24hr?type=MINI&symbol={symbol}'
@@ -18,6 +19,7 @@ async def current(symbol):
 
 
 """
+# Check function is working correctly
 async def main(symbol):
     task = asyncio.create_task(current(symbol))
     await task

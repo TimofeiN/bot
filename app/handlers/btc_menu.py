@@ -1,3 +1,6 @@
+"""
+Script for Bitcoin menu except adding new subscription
+"""
 import asyncio
 import logging
 
@@ -60,6 +63,7 @@ async def unsubscribe_all(call: types.CallbackQuery):
     await call.message.answer(text=answ_text, reply_markup=keyboards.btc_more_kb)
 
 
+# Manage user's subscriptions functions using Redis FSM
 class ManageSubscriptions(StatesGroup):
     start_manage = State()
 
