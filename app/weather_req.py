@@ -4,6 +4,7 @@ from back.xconfig import OW_TOKEN
 from app.messages import msg
 
 
+# Convert wind direction from radians to usual format
 def wind_converter(wind_dir_deg):
     wind_rad = ''
     if 337 < wind_dir_deg <= 360 or 0 <= wind_dir_deg <= 22:
@@ -25,6 +26,7 @@ def wind_converter(wind_dir_deg):
     return wind_rad
 
 
+# API requests for current weather latitude and longitude arguments
 async def current_weather(lat, lon):
     async with ClientSession() as session:
         weather_now = f'https://api.openweathermap.org/data/2.5/weather?' \
@@ -50,6 +52,7 @@ cities_dict = {
 }
 
 """
+# Check function works correctly
 async def main(lat, lon):
     task = asyncio.create_task(current_weather(lat, lon))
     await task

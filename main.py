@@ -13,20 +13,23 @@ from app.handlers.weather_hndl import register_handlers_weather
 import app.keyboards as keyboards
 import app.handlers.btc_menu as bitcoin_menu
 
-from message_sender import message_sender
+from app.message_sender import message_sender
 from app.messages import msg
 
-# import for public hosting
+# # import for public hosting
 # import pip
 # from back.background import keep_alive
 
 
+# Standard bot setup
 logging.basicConfig(level=logging.INFO)
 TOKEN = GHV_TOKEN
 storage = RedisStorage2(db=1)
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=storage)
 
+
+# Main bot handlers
 
 @dp.message_handler(commands=['start'])
 async def start_message(message: types.Message):
@@ -40,6 +43,7 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
     await message.answer("Action canceled", reply_markup=types.ReplyKeyboardRemove())
 
 
+# registration special handlers
 register_handlers_btc_subscr(dp)
 register_handlers_weather(dp)
 bitcoin_menu.register_handlers_manage_subs(dp)
@@ -58,6 +62,7 @@ async def echo(message: types.Message):
 
 
 # main functions
+
 async def on_shutdown(dp: Dispatcher):
     # Close Redis connection
     await dp.storage.close()
@@ -71,5 +76,5 @@ async def on_startup(dp: Dispatcher):
 
 
 if __name__ == '__main__':
-    # keep_alive()
+    # keep_alive()  # function for public hosting
     executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)

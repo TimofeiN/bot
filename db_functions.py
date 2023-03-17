@@ -5,6 +5,7 @@ import decimal
 from back.xconfig import db_user, db_passwd, db_name
 
 
+# add user option to database used cache Redis FSM
 async def add_user_subscription(connection, redis_data):
     if redis_data['price_type_percent'] is True:
         price = 1 - decimal.Decimal(redis_data['price_val'][:-1]) / 100
@@ -29,6 +30,7 @@ async def add_user_subscription(connection, redis_data):
             return f'You have already had this subscription'
 
 
+# Remove all users options from database
 async def unsubscribe_all(connection, user_id):
     async with connection.transaction():
         await connection.execute(
@@ -39,6 +41,7 @@ async def unsubscribe_all(connection, user_id):
         return f'unsubscribed'
 
 
+# Take all user options from database
 async def show_subscriptions(connection, user_id):
     async with connection.transaction():
         subscribed = await connection.fetchrow('''SELECT btc_subscription
@@ -62,6 +65,7 @@ async def show_subscriptions(connection, user_id):
             return user_subscriptions
 
 
+# Remove some rows from database
 async def remove_subscription(connection, subscriptions_ids):
     async with connection.transaction():
         await connection.execute('''DELETE FROM users_subscriptions WHERE id=any($1)''', subscriptions_ids)
@@ -75,12 +79,14 @@ async def check_subscribed(connection, user_id):
         return value
 
 
+# Remove all user's data from database
 async def delete_user(connection, user_id):
     async with connection.transaction():
         await connection.execute('''DELETE FROM users_subscriptions WHERE user_id=$1''', user_id)
         await connection.execute('''DELETE FROM users WHERE user_id=$1''', user_id)
 
 
+# Main coroutine for database
 async def db_main(db_function, u_data):
     con = await asyncpg.connect(host='localhost', database=db_name, user=db_user, password=db_passwd)
 

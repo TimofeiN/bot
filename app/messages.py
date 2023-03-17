@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from emoji import emojize
 
 
+# Most of the text variables used in the project
 @dataclass(frozen=True)
 class Messages:
     welcome: str = emojize('Hi! :victory_hand: \n'

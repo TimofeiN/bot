@@ -1,3 +1,4 @@
+# File with aiogram keyboards used in different parts of the project
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
 
 from app.messages import msg
